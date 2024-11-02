@@ -1,0 +1,87 @@
+services:
+  zk1:
+    image: confluentinc/cp-zookeeper:7.7.1
+    restart: always
+    hostname: zoo1
+    ports:
+      - 2181:2181
+    environment:
+      ZOOKEEPER_SERVER_ID: 1
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+      ZOOKEEPER_INIT_LIMIT: 5
+      ZOOKEEPER_SYNC_LIMIT: 2
+      
+  zoo-nav:
+    image: elkozmon/zoonavigator:1.1.3
+    ports:
+      - 9000:9000
+    environment:
+      HTTP_PORT: 9000
+    restart: unless-stopped
+
+  kfk1:
+    image: confluentinc/cp-kafka:7.7.1
+    depends_on:
+      - zk1
+    restart: on-failure
+    ports:
+      - "29092:29092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zk1:2181
+      KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
+      KAFKA_LISTENERS: INSIDE://0.0.0.0:9092,OUTSIDE://0.0.0.0:29092
+      KAFKA_ADVERTISED_LISTENERS: INSIDE://kfk1:9092,OUTSIDE://localhost:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT
+      KAFKA_DEFAULT_REPLICATION_FACTOR: 3
+      KAFKA_NUM_PARTITIONS: 3
+
+  kfk2:
+    image: confluentinc/cp-kafka:7.7.1
+    depends_on:
+      - zk1
+    restart: on-failure
+    ports:
+      - "39092:39092"
+    environment:
+      KAFKA_BROKER_ID: 2
+      KAFKA_ZOOKEEPER_CONNECT: zk1:2181
+      KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
+      KAFKA_LISTENERS: INSIDE://0.0.0.0:9092,OUTSIDE://0.0.0.0:39092
+      KAFKA_ADVERTISED_LISTENERS: INSIDE://kfk2:9092,OUTSIDE://localhost:39092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT
+      KAFKA_DEFAULT_REPLICATION_FACTOR: 3
+      KAFKA_NUM_PARTITIONS: 3
+
+  kfk3:
+    image: confluentinc/cp-kafka:7.7.1
+    depends_on:
+      - zk1
+    restart: on-failure
+    ports:
+      - "49092:49092"
+    environment:
+      KAFKA_BROKER_ID: 3
+      KAFKA_ZOOKEEPER_CONNECT: zk1:2181
+      KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
+      KAFKA_LISTENERS: INSIDE://0.0.0.0:9092,OUTSIDE://0.0.0.0:49092
+      KAFKA_ADVERTISED_LISTENERS: INSIDE://kfk3:9092,OUTSIDE://localhost:49092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT
+      KAFKA_DEFAULT_REPLICATION_FACTOR: 3
+      KAFKA_NUM_PARTITIONS: 3
+    
+  kfk-rest:
+    image: confluentinc/cp-kafka-rest:7.7.1
+    ports:
+      - "8082:8082"
+    environment:
+      KAFKA_REST_BOOTSTRAP_SERVERS: kfk1:9092,kfk2:9092,kfk3:9092
+      KAFKA_REST_ZOOKEEPER: zk1:2181
+      KAFKA_REST_LISTENERS: http://0.0.0.0:8082
+    depends_on:
+      - zk1
+      - kfk1
+      - kfk2
+      - kfk3
+    

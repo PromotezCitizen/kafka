@@ -1,0 +1,25 @@
+services:    
+  kfk-rest:
+    image: confluentinc/cp-kafka-rest:7.7.1
+    ports:
+      - "8082:8082"
+    environment:
+      KAFKA_REST_BOOTSTRAP_SERVERS: kfk1:29092,kfk2:39092,kfk3:49092
+      KAFKA_REST_ZOOKEEPER: zk1:2181,zk2:2182,zk3:2183
+      KAFKA_REST_LISTENERS: http://0.0.0.0:8082
+    networks:
+      - kafka-overlay
+
+  zoo-nav:
+    image: elkozmon/zoonavigator:1.1.3
+    ports:
+      - 9000:9000
+    environment:
+      HTTP_PORT: 9000
+    restart: unless-stopped
+    networks:
+      - kafka-overlay
+
+networks:
+  kafka-overlay:
+    external: true

@@ -1,0 +1,22 @@
+services:
+  zk2:
+    image: confluentinc/cp-zookeeper:7.7.1
+    restart: always
+    ports:
+      - 2182:2181 # kafka에서 접근하는 port
+    volumes:
+      - ../data/zk2/data:/var/lib/zookeeper/data        # 데이터 디렉토리
+      - ../data/zk2/log:/var/lib/zookeeper/log          # 로그 디렉토리
+    environment:
+      ZOOKEEPER_SERVER_ID: ${ZOOKEEPER_SERVER_ID}
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+      ZOOKEEPER_INIT_LIMIT: 5
+      ZOOKEEPER_SYNC_LIMIT: 5
+      ZOOKEEPER_SERVERS: zk1:2888:3888;zk2:2888:3888;zk3:2888:3888
+    networks:
+      - kafka-overlay
+
+networks:
+  kafka-overlay:
+    external: true

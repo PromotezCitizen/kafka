@@ -1,0 +1,30 @@
+# Java class files
+*.class
+
+# Log files
+*.log
+
+# Build directories
+/build/
+/out/
+
+# IDE-specific files
+.idea/
+*.iml
+*.class
+
+# Maven
+target/
+pom.xml.versionsBackup
+
+# Gradle
+.gradle/
+build/
+*.log
+
+# Eclipse
+.settings/
+.metadata/
+bin/
+
+**/data/
