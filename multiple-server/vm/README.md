@@ -10,5 +10,10 @@
 현재 스크립트에 작성된 내용은 제 pc의 vm 기준으로 작성되어있습니다.
 
 ## 스크립트 실행
-모든 스크립트는 `setup-***.sh $1`으로 입력받습니다.   
+kafka-rest를 제외한 모든 스크립트는 `setup-***.sh $1`으로 입력받습니다.   
 `$1`에는 kafka_id 또는 zookeeper_id를 넣어줍니다.
+
+## systemd
+/etc/systemd/system 디렉터리에 service를 만들고 해당하는 systemd.txt를 추가합니다.
+이후 `systemctl daemon-reload` -> `systemctl start {{ service name }}`을 입력하여 정상 실행되는지 확인합니다.
+정상 실행 확인 후 `systemctl enable {{ service name }}`을 통해 서버 실행 시 자동으로 켜지도록 합니다.

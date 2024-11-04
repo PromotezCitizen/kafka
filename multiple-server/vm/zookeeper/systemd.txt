@@ -1,0 +1,17 @@
+[Unit]
+Description=zookeeper-server
+After=network.target
+
+[Service]
+Type=forking
+User=vboxuser
+Group=vboxuser
+SyslogIdentifier=zookeeper-server
+WorkingDirectory=/home/vboxuser/zookeeper
+Restart=always
+RestartSec=0s
+ExecStart=/home/vboxuser/zookeeper/bin/zkServer.sh start
+ExecStop=/home/vboxuser/zookeeper/bin/zkServer.sh stop
+
+[Install]
+WantedBy=multi-user.target

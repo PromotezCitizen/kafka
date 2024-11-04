@@ -1,0 +1,17 @@
+[Unit]
+Description=Confluent Kafka REST Proxy
+After=network.target kafka.service
+
+[Service]
+Type=simple
+User=vboxuser
+Group=vboxuser
+SyslogIdentifier=kafka-rest
+WorkingDirectory=/home/vboxuser/confluent
+Restart=on-failure
+RestartSec=5s
+ExecStart=/home/vboxuser/confluent/bin/kafka-rest-start /home/vboxuser/rest.properties
+ExecStop=/home/vboxuser/confluent/bin/kafka-rest-stop
+
+[Install]
+WantedBy=multi-user.target

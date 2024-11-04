@@ -1,0 +1,17 @@
+[Unit]
+Description=kafka-server
+After=network.target
+
+[Service]
+Type=simple
+User=vboxuser
+Group=vboxuser
+SyslogIdentifier=kafka-server
+WorkingDirectory=/home/vboxuser/kafka
+Restart=no
+RestartSec=0s
+ExecStart=/home/vboxuser/kafka/bin/kafka-server-start.sh /home/vboxuser/kafka/config/server.properties
+ExecStop=/home/vboxuser/kafka/bin/kafka-server-stop.sh
+
+[Install]
+WantedBy=multi-user.target
