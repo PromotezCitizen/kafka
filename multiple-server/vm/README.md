@@ -38,3 +38,10 @@ kafka-rest를 제외한 모든 스크립트는 `setup-***.sh $1`으로 입력받
 /etc/systemd/system 디렉터리에 service를 만들고 해당하는 systemd.txt를 추가합니다.
 이후 `systemctl daemon-reload` -> `systemctl start {{ service name }}`을 입력하여 정상 실행되는지 확인합니다.
 정상 실행 확인 후 `systemctl enable {{ service name }}`을 통해 서버 실행 시 자동으로 켜지도록 합니다.
+
+## vm 한번에 실행
+kafka.ps1 스크립트를 이용하면 됩니다. 이때 vm의 이름은 `kafka-{{ vm name }}`으로 수정 바랍니다.
+```
+./kafka.ps1 -Action start -Pattern "kafka"
+./kafka.ps1 -Action stop  -Pattern "kafka"
+```
